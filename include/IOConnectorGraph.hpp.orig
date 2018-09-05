@@ -1,0 +1,59 @@
+#include <QtWidgets/QWidget>
+#include <QPaintEvent>
+#include <vector>
+
+using std::vector;
+
+class IOConnectorGraph : public QWidget
+{
+public:
+    IOConnectorGraph(QWidget* parent);
+    class NodeChild
+    {
+    public:
+        NodeChild(const QString& name);
+        void setName(const QString& name);
+        const QString& name() const;
+        const int displayY() const;
+        void setDisplayY(const int y);
+    private:
+        QString m_name;
+        int m_display_y;
+    };
+    class NodeGroup
+    {
+    public:
+        void setName(const QString& name);
+        const QString name() const;
+        void addChild(const IOConnectorGraph::NodeChild childNode);
+        void setStatus(const int status);
+        const int status();
+        class Status
+        {
+            enum
+            {
+                NORMAL,
+                EXPANDED
+            };
+        };
+    private:
+        QString m_name;
+        int m_status;
+        vector<IOConnectorGraph::NodeChild> m_child_nodes;
+    };
+    struct Connection
+    {
+        int input_id;
+        int output_id;
+    };
+    void appendInputNodeGroup(const NodeGroup nodeGroup);
+    void appendOutputNodeGroup(const NodeGroup nodeGroup);
+protected:
+    void paintEvent(QPaintEvent* event) override;
+    void resizeEvent(QResizeEvent * event) override;
+private:
+    QRect m_left_rect, m_right_rect;
+    vector<NodeGroup> m_input_node_groups;
+    vector<NodeGroup> m_output_node_groups;
+    vector<Connection> m_connections;
+};

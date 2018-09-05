@@ -1,0 +1,13 @@
+#include "MainWindow.hpp"
+
+MainWindow::MainWindow() :
+    QMainWindow(0)
+{
+    setGeometry(0,0,800,600);
+    m_connector_graph = new IOConnectorGraph(this);
+}
+
+void MainWindow::resizeEvent(QResizeEvent* event)
+{
+    m_connector_graph->setGeometry(0,0,width(),height());
+}
